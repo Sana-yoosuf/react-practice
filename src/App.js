@@ -4,10 +4,13 @@ import BmiScore from "./components/BmiScore/BmiScore";
 import Bodymass from "./components/Bodymass/Bodymass";
 import Forms from "./components/Forms/Forms";
 
-// import Hello from "./components/Hello";
+import Hello from "./components/Hello";
 import "./index.css";
 
+
 function App() {
+  const[show,setShow]=useState(false)
+  const [changeWeight,setChangeWeight]=useState({wit:"", type:""})
   const [bmi, setBmi] = useState("00");
   const [bmiType, setBmiType] = useState("Not Calculated");
   const [bmiRange, setBmiRange] = useState({
@@ -34,7 +37,9 @@ function App() {
     obesityTwo: { low: calWeight(35,h), high: calWeight(39.9,h) },
     obesityThree: { high: calWeight(40,h) },
     };
-    setBmiRange(range)
+    setBmiRange(range);
+    setChangeWeight(weightChange(result,w,range));
+    setShow(true);
   };
 
   const calBmi = (w, h) => {
@@ -43,7 +48,29 @@ function App() {
 
   // this is function without return
 
-  const calWeight = (b, h) => (b * h * h).toFixed(2);
+  const calWeight = (result, h) => (result * h * h).toFixed(2);
+
+  const weightChange=(result,w,range)=>{
+    let changeObj;
+    if(result>24.9){
+      changeObj={
+        wit:(w-range.normal.high).toFixed(2),
+        type:"positive"
+
+      };
+      return changeObj;
+    }
+    else if(result<18.5){
+      changeObj={
+        wit:(range.normal.low-w).toFixed(2),
+        type:"negative",
+      };
+      return changeObj;
+    }else{
+      changeObj={wit:0,type:"normal"};
+      return changeObj;
+    }
+  }
 
   const weightType = (bmi) => {
     if (bmi < 18.5) {
@@ -63,21 +90,22 @@ function App() {
 
   return (
     <>
-      {/* <Hello/> */}
+      <Hello/>
       {/* <Bodymass /> */}
       <div className="container">
         <div className="row justify-content-center mt-5 mx-2">
           <Forms getData={onFormSub} />
         </div>
-
+        {show && (
         <div className="row justify-content-center mt-5">
           <div className="col-12 col-sm-6 mb-5">
-            <BmiScore bmino={bmi} bmiName={bmiType} />
+            <BmiScore bmino={bmi} bmiName={bmiType}  changeWeight={changeWeight}/>
           </div>
           <div className="col-12 col-sm-6">
-            <BmiList />
+            <BmiList range={bmiRange} bmi={bmi}/>
           </div>
         </div>
+        )}
       </div>
     </>
   );

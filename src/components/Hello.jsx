@@ -3,15 +3,13 @@ import "./Hello.css";
 
 const Hello = () => {
   const [text, setText] = useState("red");
-  const [another,setAnother]=useState("green")
+ const [show,setShow]=useState(false);
 
   const changeme = () => {
     setText(text === "red" ? "#009933" : "red");
   };
 
-  const changeu=()=>{
-    setAnother(another === "green" ? "#cccccc" : "green");
-  }
+  
 
   return (
     <div className="main">
@@ -21,18 +19,15 @@ const Hello = () => {
         <h1 style={{ color: text }} onClick={changeme}>
           Hi Hasi
         </h1>
+        <button onClick={()=>setShow(true)}>Click me</button>
+        {show&&
+          <h1 style={{ color: text }} onClick={changeme}>hii..Am your buddy Sana </h1>
+        }
+        
       </div>
-      <div className="hello">
-        <h1 style={{ color: another }} onClick={changeu}>
-          Hi Hasi
-        </h1>
-      </div>
+     
 
-      <div className="hello">
-        <h1 style={{ color: text }} onClick={changeme}>
-          Hi Hasi
-        </h1>
-      </div>
+      
     </div>
   );
 };
